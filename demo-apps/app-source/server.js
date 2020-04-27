@@ -19,6 +19,7 @@ dispatcher.onGet("/", function(req, res) {
             <title>Powered By Paketo Buildpacks</title>
         </head>
         <body>
+          TEXT
           <img style="display: block; margin-left: auto; margin-right: auto; width: 50%;" src="https://paketo.io/images/paketo-logo-full-color.png"></img>
         </body>
     </html>
@@ -27,7 +28,7 @@ dispatcher.onGet("/", function(req, res) {
 
 dispatcher.onGet("/greeting", function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello from your application image');
+    res.end('Hello from your application image 6');
 });
 
 server.listen(port, (err) => {
@@ -37,6 +38,3 @@ server.listen(port, (err) => {
 
   console.log(`NOT vendored server is listening on ${port}`);
 });
-
-
-

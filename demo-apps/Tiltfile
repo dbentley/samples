@@ -1,0 +1,6 @@
+use_live_update = False
+
+if use_live_update:
+  include('Tiltfile.liveupdate')
+else:
+  include('Tiltfile.base')

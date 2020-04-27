@@ -1,0 +1,8 @@
+k8s_yaml('deploy.yaml')
+custom_build(
+  ref='paketo-demo-app',
+  command='pack build paketo-demo-app -p app-source --builder gcr.io/paketo-buildpacks/builder:base && docker tag paketo-demo-app $EXPECTED_REF',
+  deps=['app-source'],
+)
+
+k8s_resource('paketo-node', port_forwards='8080:8080')

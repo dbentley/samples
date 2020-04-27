@@ -1,0 +1,29 @@
+k8s_yaml('deploy.yaml')
+custom_build(
+  ref='paketo-demo-app-base',
+  command='pack build paketo-demo-app -p app-source --builder gcr.io/paketo-buildpacks/builder:base && docker tag paketo-demo-app $EXPECTED_REF',
+  deps=['app-source'],
+)
+
+dockerfile_contents="""
+FROM tiltdev/entr:2020-16-04 as entr-img
+
+FROM paketo-demo-app-base
+
+RUN ["touch", "/workspace/.restart-proc"]
+COPY --from=entr-img /entr /
+"""
+
+docker_build(
+  'paketo-demo-app',
+  'app-source',
+  entrypoint='echo /workspace/.restart-proc | /entr -rz /cnb/lifecycle/launcher',
+  dockerfile_contents=dockerfile_contents,
+  live_update=[
+    fall_back_on('package.json'),
+    sync('app-source', '/workspace'),
+    run('touch /workspace/.restart-proc'),
+  ],
+)
+
+k8s_resource('paketo-node', port_forwards='8080:8080')
